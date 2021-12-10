@@ -1,4 +1,5 @@
 import SideBarComponent from '../components/side-bar'
+import TableComponent from '../components/table'
 
 
 export default function ProdutoPage() {
@@ -15,8 +16,8 @@ export default function ProdutoPage() {
               </div>
               <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-8">
                 {/* Replace with your content */}
-                <div className="py-4">
-                  <div className="border-4 border-dashed border-gray-200 rounded-lg h-96" />
+                <div className="py-16">
+                  <TableComponent />
                 </div>
                 {/* /End replace */}
               </div>
