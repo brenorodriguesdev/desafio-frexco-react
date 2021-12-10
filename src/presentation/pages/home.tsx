@@ -17,7 +17,7 @@ export default function HomePage() {
               <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-8">
                 {/* Replace with your content */}
                 <div className="py-16">
-                  <TableComponent />
+                  <TableComponent items={[]} columns={[]} />
                 </div>
                 {/* /End replace */}
               </div>

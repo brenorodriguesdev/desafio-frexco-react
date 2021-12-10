@@ -10,12 +10,13 @@ interface ProdutoPageProps {
 
 export default function ProdutoPage({ listarProdutosUseCase }: ProdutoPageProps) {
 
-  const [produtos, setProdutos] = useState<ProdutoModel[]>()
+  const [produtos, setProdutos] = useState<ProdutoModel[]>([])
 
   useEffect(() => {
     async function listarProdutos() {
       try {
         const produtos = await listarProdutosUseCase.listar()
+        console.log(produtos)
         setProdutos(produtos)
       } catch (error) {
         setProdutos([])
@@ -39,7 +40,10 @@ export default function ProdutoPage({ listarProdutosUseCase }: ProdutoPageProps)
               <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-8">
                 {/* Replace with your content */}
                 <div className="py-16">
-                  <TableComponent items={produtos} />
+                  <TableComponent items={produtos} columns={[
+                    'id',
+                    'nome'
+                  ]} />
                 </div>
                 {/* /End replace */}
               </div>

@@ -1,10 +1,12 @@
-const people = [
-    { name: 'Jane Cooper', title: 'Regional Paradigm Technician', role: 'Admin', email: 'jane.cooper@example.com' },
-    { name: 'Cody Fisher', title: 'Product Directives Officer', role: 'Owner', email: 'cody.fisher@example.com' },
-    // More people...
-]
+interface TableComponentProps {
+    items: any
+    columns: string[]
+}
 
-export default function TableComponent() {
+export default function TableComponent({ items, columns }: TableComponentProps) {
+
+
+
     return (
         <div className="flex flex-col">
             <div className="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
@@ -13,47 +15,52 @@ export default function TableComponent() {
                         <table className="min-w-full divide-y divide-gray-200">
                             <thead className="bg-gray-50">
                                 <tr>
-                                    <th
-                                        scope="col"
-                                        className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                                    >
-                                        Name
-                                    </th>
-                                    <th
-                                        scope="col"
-                                        className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                                    >
-                                        Title
-                                    </th>
-                                    <th
-                                        scope="col"
-                                        className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                                    >
-                                        Email
-                                    </th>
-                                    <th
-                                        scope="col"
-                                        className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                                    >
-                                        Role
-                                    </th>
+
+                                    {
+                                        columns.map(name => (
+                                            <th
+                                                scope="col"
+                                                className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                                            >
+                                                {name}
+                                            </th>
+                                        ))
+                                    }
+
                                     <th scope="col" className="relative px-6 py-3">
-                                        <span className="sr-only">Edit</span>
+                                        <span className="sr-only">Editar</span>
                                     </th>
+
+                                    <th scope="col" className="relative px-6 py-3">
+                                        <span className="sr-only">Excluir</span>
+                                    </th>
+
+
                                 </tr>
                             </thead>
                             <tbody>
-                                {people.map((person, personIdx) => (
-                                    <tr key={person.email} className={personIdx % 2 === 0 ? 'bg-white' : 'bg-gray-50'}>
-                                        <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{person.name}</td>
-                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{person.title}</td>
-                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{person.email}</td>
-                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{person.role}</td>
+                                {items.map((item: any, index: number) => (
+                                    <tr key={index} className={index % 2 === 0 ? 'bg-white' : 'bg-gray-50'}>
+
+                                        {
+                                            columns.map((name, index) => (
+                                                <td className={index === 0 ? 'px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900' 
+                                                : 'px-6 py-4 whitespace-nowrap text-sm text-gray-500'}>{item[name]}</td>
+                                            ))
+                                        }
+
                                         <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                                             <a href="#" className="text-indigo-600 hover:text-indigo-900">
-                                                Edit
+                                                Editar
                                             </a>
                                         </td>
+
+                                        <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                                            <a href="#" className="text-indigo-600 hover:text-indigo-900">
+                                                Excluir
+                                            </a>
+                                        </td>
+
                                     </tr>
                                 ))}
                             </tbody>
