@@ -42,7 +42,8 @@ export default function ProdutoPage({ listarProdutosUseCase }: ProdutoPageProps)
                 <div className="py-16">
                   <TableComponent items={produtos} columns={[
                     'id',
-                    'nome'
+                    'nome',
+                    'categoria.nome'
                   ]} />
                 </div>
                 {/* /End replace */}
