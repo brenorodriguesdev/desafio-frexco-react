@@ -1,5 +1,5 @@
 export interface AtualizarProdutoModel {
-    id: number
+    id?: number
     nome: string
     idCategoria: number
 }
