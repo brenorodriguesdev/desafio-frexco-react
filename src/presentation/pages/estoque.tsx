@@ -4,7 +4,7 @@ import { ListarEstoquesUseCase } from '../../domain/useCases/estoque/listar-esto
 import { makeAtualizarEstoqueService } from '../../main/factories/services/estoque/atualizar-estoque'
 import { makeCriarEstoqueService } from '../../main/factories/services/estoque/criar-estoque'
 import ModalEstoqueCreateComponent from '../components/modal-estoque-create'
-import ModalEstoqueUpdateComponent from '../components/model-estoque-update'
+import ModalEstoqueUpdateComponent from '../components/modal-estoque-update'
 import SideBarComponent from '../components/side-bar'
 import TableComponent from '../components/table'
 import { EstoqueContext } from '../contexts/estoque'
