@@ -1,20 +1,41 @@
-import { Fragment, useRef, useState } from 'react'
+import { Fragment } from 'react'
 import { Dialog, Transition } from '@headlessui/react'
 import { ExclamationIcon } from '@heroicons/react/outline'
 
 interface ModalDeleteComponentProps {
     open: boolean
     setOpen: any
+    service: any
+    method: string
+    idItem: number
+    items: any
+    setItems: any
 }
-export default function ModalDeleteComponent({ open, setOpen } : ModalDeleteComponentProps) {
+export default function ModalDeleteComponent({
+    open,
+    setOpen,
+    idItem,
+    service,
+    method,
+    items,
+    setItems }: ModalDeleteComponentProps) {
 
-    const cancelButtonRef = useRef(null)
 
+    async function onDelete() {
+        try {
+            await service[method](idItem)
+            const itemsFiltered = items.filter((item: any) => item.id != idItem)
+            setItems(itemsFiltered)
+            setOpen(false)
+        } catch (error: any) {
+
+        }
+    }
     return (
 
 
         <Transition.Root show={open} as={Fragment}>
-            <Dialog as="div" className="fixed z-10 inset-0 overflow-y-auto" initialFocus={cancelButtonRef} onClose={setOpen}>
+            <Dialog as="div" className="fixed z-10 inset-0 overflow-y-auto" onClose={setOpen}>
                 <div className="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
                     <Transition.Child
                         as={Fragment}
@@ -28,7 +49,6 @@ export default function ModalDeleteComponent({ open, setOpen } : ModalDeleteComp
                         <Dialog.Overlay className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" />
                     </Transition.Child>
 
-                    {/* This element is to trick the browser into centering the modal contents. */}
                     <span className="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">
                         &#8203;
                     </span>
@@ -52,7 +72,7 @@ export default function ModalDeleteComponent({ open, setOpen } : ModalDeleteComp
                                     </Dialog.Title>
                                     <div className="mt-2">
                                         <p className="text-sm text-gray-500">
-                                            Você tem certeza que deseja deletar esse item?  
+                                            Você tem certeza que deseja deletar esse item?
                                         </p>
                                     </div>
                                 </div>
@@ -61,16 +81,15 @@ export default function ModalDeleteComponent({ open, setOpen } : ModalDeleteComp
                                 <button
                                     type="button"
                                     className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-red-600 text-base font-medium text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:ml-3 sm:w-auto sm:text-sm"
-                                    onClick={() => setOpen(false)}
+                                    onClick={() => onDelete()}
                                 >
                                     Deletar
                                 </button>
-                                
+
                                 <button
                                     type="button"
                                     className="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:w-auto sm:text-sm"
                                     onClick={() => setOpen(false)}
-                                    ref={cancelButtonRef}
                                 >
                                     Cancelar
                                 </button>
