@@ -4,17 +4,42 @@ import ModalDeleteComponent from './modal-delete'
 interface TableComponentProps {
     items: any
     columns: string[]
+    service: any
+    method: string
+    setItems: any
+    item: any
+    setItem: any
+    openModalUpdate: boolean
+    setOpenModalUpdate: any
 }
 
-export default function TableComponent({ items, columns }: TableComponentProps) {
+export default function TableComponent({
+    items,
+    columns,
+    service,
+    method,
+    setItems,
+    item,
+    setItem,
+    openModalUpdate,
+    setOpenModalUpdate }: TableComponentProps) {
 
     const [openModalDelete, setOpenModalDelete] = useState(false)
 
     return (
 
+
+
         <div className="flex flex-col">
 
-            <ModalDeleteComponent open={openModalDelete} setOpen={setOpenModalDelete} />
+            <ModalDeleteComponent open={openModalDelete}
+                setOpen={setOpenModalDelete}
+                service={service}
+                method={method}
+                idItem={item ? item.id : 0}
+                items={items}
+                setItems={setItems}
+            />
 
             <div className="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
                 <div className="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
@@ -57,13 +82,19 @@ export default function TableComponent({ items, columns }: TableComponentProps) 
                                         }
 
                                         <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                                            <a href="#" className="text-indigo-600 hover:text-indigo-900">
+                                            <a href="#" className="text-green-600 hover:text-green-900" onClick={() => {
+                                                setItem(item)
+                                                setOpenModalUpdate(true)
+                                            }}>
                                                 Editar
                                             </a>
                                         </td>
 
                                         <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                                            <a href="#" className="text-indigo-600 hover:text-indigo-900" onClick={() => setOpenModalDelete(true)}>
+                                            <a href="#" className="text-green-600 hover:text-green-900" onClick={() => {
+                                                setItem(item)
+                                                setOpenModalDelete(true)
+                                            }}>
                                                 Excluir
                                             </a>
                                         </td>
