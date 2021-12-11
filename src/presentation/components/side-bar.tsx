@@ -5,6 +5,7 @@ import {
 
 const navigation = [
   { name: 'Página Inicial', href: '/', icon: HomeIcon, current: true },
+  { name: 'Produtos em Estoque', href: '/produtoEstoque', icon: ArchiveIcon, current: false },
   { name: 'Produtos', href: '/produto', icon: ArchiveIcon, current: false },
   { name: 'Estoques', href: '/estoque', icon: ArchiveIcon, current: false },
 ]
