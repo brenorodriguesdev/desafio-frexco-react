@@ -33,11 +33,9 @@ export class Axios implements HttpClient {
         }
     }
 
-    async delete(params: any): Promise<any> {
+    async delete(route: string): Promise<any> {
         try {
-            const response = await api.get(this.route, {
-                params
-            })
+            const response = await api.delete(route)
             return response.data
         } catch (error: any) {
             return new Error(error.response.data.message)
