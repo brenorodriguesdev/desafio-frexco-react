@@ -27,7 +27,7 @@ export default function EstoquePage({ listarEstoquesUseCase, deletarEstoqueUseca
     openModalUpdate } = useContext(EstoqueContext)
 
   useEffect(() => {
-    async function listarProdutos() {
+    async function listarEstoques() {
       try {
         const estoques = await listarEstoquesUseCase.listar()
         setEstoques(estoques)
@@ -36,7 +36,7 @@ export default function EstoquePage({ listarEstoquesUseCase, deletarEstoqueUseca
       }
     }
 
-    listarProdutos()
+    listarEstoques()
   }, [])
 
   return (
