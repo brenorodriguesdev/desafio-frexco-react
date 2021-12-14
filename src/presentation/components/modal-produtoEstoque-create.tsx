@@ -1,28 +1,81 @@
-import { Fragment } from 'react'
+import { Fragment, useState } from 'react'
 import { Dialog, Transition } from '@headlessui/react'
-import { CriarEstoqueUseCase } from '../../domain/useCases/estoque/criar-estoque'
+import { AdicionarProdutoEstoqueUseCase } from '../../domain/useCases/estoque/adicionar-produto-estoque'
+import { BuscarEstoqueUseCase } from '../../domain/useCases/estoque/buscar-produto'
+import { BuscarProdutoUseCase } from '../../domain/useCases/produto/buscar-produto'
+import { ProdutoModel } from '../../domain/models/produto/produto'
 import { EstoqueModel } from '../../domain/models/estoque/estoque'
 
 interface ModalProdutoEstoqueCreateComponentProps {
     open: boolean
     setOpen: any
+    adicionarProdutoEstoqueUseCase: AdicionarProdutoEstoqueUseCase
+    buscarProdutoUseCase: BuscarProdutoUseCase
+    buscarEstoqueUseCase: BuscarEstoqueUseCase
 }
+
+var buscarProdutoTimeOut: NodeJS.Timeout
+var buscarEstoqueTimeOut: NodeJS.Timeout
+
 export default function ModalProdutoEstoqueCreateComponent({
     open,
     setOpen,
+    adicionarProdutoEstoqueUseCase,
+    buscarProdutoUseCase,
+    buscarEstoqueUseCase
 }: ModalProdutoEstoqueCreateComponentProps) {
+    const [produto, setProduto] = useState<ProdutoModel | undefined>()
+    const [estoque, setEstoque] = useState<EstoqueModel | undefined>()
+
+    async function buscarProduto(id: number) {
+        if (buscarProdutoTimeOut)
+            clearTimeout(buscarProdutoTimeOut)
+        buscarProdutoTimeOut = setTimeout(async () => {
+            try {
+                const produto = await buscarProdutoUseCase.buscar(id)
+                if (produto instanceof Error) {
+                    return setProduto(undefined)
+                }
+                return setProduto(produto)
+            }
+            catch (error) {
+                return setProduto(undefined)
+            }
+        }, 500)
+    }
+
+
+    async function buscarEstoque(id: number) {
+        if (buscarEstoqueTimeOut)
+            clearTimeout(buscarEstoqueTimeOut)
+        buscarEstoqueTimeOut = setTimeout(async () => {
+            try {
+                const estoque = await buscarEstoqueUseCase.buscar(id)
+                if (estoque instanceof Error) {
+                    return setEstoque(undefined)
+                }
+                return setEstoque(estoque)
+            }
+            catch (error) {
+                return setEstoque(undefined)
+            }
+        }, 500)
+    }
 
     async function onCreate(event: any) {
         try {
             event.preventDefault()
-            // const nome = event.target[0].value
-            // const estoque = await criarEstoqueUseCase.criar({
-            //     nome
-            // })
-            // const lista: any = estoques
-            // lista.push(estoque)
-            // setEstoques(lista)
+            const idEstoque = event.target[0].value
+            const idProduto = event.target[2].value
+
+            await adicionarProdutoEstoqueUseCase.adicionar({
+                idProduto,
+                idEstoque
+            })
+
             setOpen(false)
+            setProduto(undefined)
+            setEstoque(undefined)
         }
         catch (error) {
 
@@ -79,6 +132,7 @@ export default function ModalProdutoEstoqueCreateComponent({
                                                 </label>
                                                 <div className="mt-1 sm:mt-0 sm:col-span-2">
                                                     <input
+                                                        onChange={(e) => buscarEstoque(Number(e.target.value))}
                                                         type="text"
                                                         name="estoque"
                                                         id="estoque"
@@ -96,6 +150,7 @@ export default function ModalProdutoEstoqueCreateComponent({
                                                 </label>
                                                 <div className="mt-1 sm:mt-0 sm:col-span-2">
                                                     <input
+                                                        value={estoque ? estoque.nome : ''}
                                                         readOnly={true}
                                                         disabled={true}
                                                         type="text"
@@ -115,6 +170,7 @@ export default function ModalProdutoEstoqueCreateComponent({
                                                 </label>
                                                 <div className="mt-1 sm:mt-0 sm:col-span-2">
                                                     <input
+                                                        onChange={(e) => buscarProduto(Number(e.target.value))}
                                                         type="text"
                                                         name="produto"
                                                         id="produto"
@@ -132,6 +188,7 @@ export default function ModalProdutoEstoqueCreateComponent({
                                                 </label>
                                                 <div className="mt-1 sm:mt-0 sm:col-span-2">
                                                     <input
+                                                        value={produto ? produto.nome : ''}
                                                         readOnly={true}
                                                         disabled={true}
                                                         type="text"
@@ -150,7 +207,11 @@ export default function ModalProdutoEstoqueCreateComponent({
                                 <div className="pt-5">
                                     <div className="flex justify-end">
                                         <button
-                                            onClick={() => setOpen(false)}
+                                            onClick={() => {
+                                                setOpen(false)
+                                                setProduto(undefined)
+                                                setEstoque(undefined)
+                                            }}
                                             type="button"
                                             className="bg-white py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
                                         >
