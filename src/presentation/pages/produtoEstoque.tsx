@@ -1,37 +1,39 @@
 import { useContext, useEffect } from 'react'
+import { ListarEstoquesUseCase } from '../../domain/useCases/estoque/listar-estoques'
 import { DeletarProdutoUseCase } from '../../domain/useCases/produto/deletar-produto'
-import { ListarProdutosUseCase } from '../../domain/useCases/produto/listar-produtos'
-import { makeAtualizarProdutoService } from '../../main/factories/services/produto/atualizar-produto'
-import { makeCriarProdutoService } from '../../main/factories/services/produto/criar-produto'
-import { makeListarCategoriasService } from '../../main/factories/services/produto/listar-categorias'
-import ModalProdutoCreateComponent from '../components/modal-produto-create'
-import ModalProdutoUpdateComponent from '../components/modal-produto-update'
+import { makeAdicionarProdutoEstoqueService } from '../../main/factories/services/estoque/adicionar-produto-estoque'
+import { makeBuscarEstoqueService } from '../../main/factories/services/estoque/buscar-estoque'
+import { makeDeletarProdutoEstoqueService } from '../../main/factories/services/estoque/deletar-produto-estoque'
+import { makeListarEstoquesServiceListarProdutoEstoquePorEstoqueService } from '../../main/factories/services/estoque/listar-produto-estoque-por-estoque'
+import { makeBuscarProdutoService } from '../../main/factories/services/produto/buscar-produto'
 import ModalProdutoEstoqueCreateComponent from '../components/modal-produtoEstoque-create'
 import ModalProdutoEstoqueDeleteComponent from '../components/modal-produtoEstoque-delete'
 import SideBarComponent from '../components/side-bar'
+import TableProdutoEstoqueComponent from '../components/table-produtoEstoque'
 import { ProdutoEstoqueContext } from '../contexts/produtoEstoque'
 
-interface ProdutoPageProps {
-    listarProdutosUseCase: ListarProdutosUseCase
+interface ProdutoEstoquePageProps {
+    listarEstoquesUseCase: ListarEstoquesUseCase
     deletarProdutoUseCase: DeletarProdutoUseCase
 }
 
-export default function ProdutoEstoquePage({ listarProdutosUseCase, deletarProdutoUseCase }: ProdutoPageProps) {
+export default function ProdutoEstoquePage({ listarEstoquesUseCase, deletarProdutoUseCase }: ProdutoEstoquePageProps) {
 
-    const { setOpenModalCreate, openModalCreate, setOpenModalUpdate, openModalUpdate, setOpenModalDelete, openModalDelete } = useContext(ProdutoEstoqueContext)
+    const { setOpenModalCreate, openModalCreate, setOpenModalDelete, openModalDelete, estoques, setEstoques } = useContext(ProdutoEstoqueContext)
 
-    // useEffect(() => {
-    //     async function listarProdutos() {
-    //         try {
-    //             const produtos = await listarProdutosUseCase.listar()
-    //             setProdutos(produtos)
-    //         } catch (error) {
-    //             setProdutos([])
-    //         }
-    //     }
+    useEffect(() => {
+        async function listarEstoques() {
+            try {
+                const estoques = await listarEstoquesUseCase.listar()
+                setEstoques(estoques)
+            } catch (error) {
+                setEstoques([])
+            }
+        }
 
-    //     listarProdutos()
-    // }, [])
+        listarEstoques()
+    }, [])
+
 
     return (
         <>
@@ -41,12 +43,18 @@ export default function ProdutoEstoquePage({ listarProdutosUseCase, deletarProdu
                 <ModalProdutoEstoqueCreateComponent
                     open={openModalCreate}
                     setOpen={setOpenModalCreate}
+                    adicionarProdutoEstoqueUseCase={makeAdicionarProdutoEstoqueService()}
+                    buscarProdutoUseCase={makeBuscarProdutoService()}
+                    buscarEstoqueUseCase={makeBuscarEstoqueService()}
                 />
 
 
                 <ModalProdutoEstoqueDeleteComponent
                     open={openModalDelete}
                     setOpen={setOpenModalDelete}
+                    deletarProdutoEstoqueUseCase={makeDeletarProdutoEstoqueService()}
+                    buscarProdutoUseCase={makeBuscarProdutoService()}
+                    buscarEstoqueUseCase={makeBuscarEstoqueService()}
                 />
 
                 <div className="md:pl-64 flex flex-col flex-1">
@@ -87,21 +95,12 @@ export default function ProdutoEstoquePage({ listarProdutosUseCase, deletarProdu
 
                             <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-8">
                                 <div className="py-8">
-                                    {/* <TableComponent
-                                        items={produtos}
-                                        columns={[
-                                            'id',
-                                            'nome',
-                                            'categoria.nome'
-                                        ]}
-                                        service={deletarProdutoUseCase}
-                                        method="deletar"
-                                        setItems={setProdutos}
-                                        setOpenModalUpdate={setOpenModalUpdate}
-                                        openModalUpdate={openModalUpdate}
-                                        item={produto}
-                                        setItem={setProduto}
-                                    /> */}
+                                    <TableProdutoEstoqueComponent items={estoques} columns={[
+                                        'id',
+                                        'nome'
+                                    ]} 
+                                    listarProdutoEstoquePorEstoqueUseCase={makeListarEstoquesServiceListarProdutoEstoquePorEstoqueService()}
+                                    />
                                 </div>
                             </div>
                         </div>
